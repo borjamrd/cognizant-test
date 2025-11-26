@@ -1,5 +1,6 @@
 <div class="container">
   <h1>Upload candidate</h1>
+
   <form
     [formGroup]="candidateForm"
     (ngSubmit)="submit()"
@@ -16,9 +17,18 @@
     </mat-form-field>
 
     <div class="file-input-container">
-      <button type="button" mat-stroked-button (click)="fileInput.click()">
+      <button mat-stroked-button (click)="downloadTemplate($event)">
+        <mat-icon>download</mat-icon>
+        Download template
+      </button>
+      <button
+        type="button"
+        mat-stroked-button
+        color="accent"
+        (click)="fileInput.click()"
+      >
         <mat-icon>upload_file</mat-icon>
-        {{ selectedFile ? selectedFile.name : 'Seleccionar Excel' }}
+        {{ selectedFile ? selectedFile.name : 'Upload excel file' }}
       </button>
       <input
         hidden

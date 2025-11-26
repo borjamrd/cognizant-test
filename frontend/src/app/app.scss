@@ -4,12 +4,16 @@
   margin: 0 auto;
 }
 
+.file-input-container {
+  display: flex;
+  gap: 1rem;
+}
+
 .candidate-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-bottom: 2rem;k
-
+  margin-bottom: 2rem;
   mat-form-field {
     width: 100%;
   }

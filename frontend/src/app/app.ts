@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, inject, ViewChild } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroupDirective,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CandidateService } from './candidate.service';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +33,7 @@ export class App {
   private fb = inject(FormBuilder);
   private candidateService = inject(CandidateService);
   @ViewChild('fileInput') fileInputElement!: ElementRef;
+  @ViewChild(FormGroupDirective) formDirective!: FormGroupDirective;
 
   candidates = this.candidateService.candidates;
 
@@ -59,6 +65,19 @@ export class App {
     }
   }
 
+  downloadTemplate(event: Event) {
+    event.preventDefault();
+
+    const link = document.createElement('a');
+    link.setAttribute('target', '_blank');
+    link.setAttribute('href', '/templates/candidate_template.xlsx');
+    link.setAttribute('download', 'candidate_template.xlsx');
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
   submit() {
     if (this.candidateForm.valid && this.selectedFile) {
       const { name, surname } = this.candidateForm.value;
@@ -70,11 +89,11 @@ export class App {
         .uploadCandidate(name, surname, this.selectedFile)
         .subscribe({
           next: () => {
-            this.candidateForm.reset();
             this.selectedFile = null;
             if (this.fileInputElement) {
               this.fileInputElement.nativeElement.value = '';
             }
+            this.formDirective.resetForm();
           },
           error: (err) => console.error('Error al subir', err),
         });
