@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CandidateService } from './candidate.service';
 
@@ -27,6 +27,7 @@ import { MatTableModule } from '@angular/material/table';
 export class App {
   private fb = inject(FormBuilder);
   private candidateService = inject(CandidateService);
+  @ViewChild('fileInput') fileInputElement!: ElementRef;
 
   candidates = this.candidateService.candidates;
 
@@ -71,6 +72,9 @@ export class App {
           next: () => {
             this.candidateForm.reset();
             this.selectedFile = null;
+            if (this.fileInputElement) {
+              this.fileInputElement.nativeElement.value = '';
+            }
           },
           error: (err) => console.error('Error al subir', err),
         });
