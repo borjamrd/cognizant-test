@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Candidate } from '@cognizant-test/interfaces';
 import { tap } from 'rxjs/operators';
+import { environment } from '../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class CandidateService {
     formData.append('surname', surname);
     formData.append('file', file);
 
-    return this.http.post<Candidate>('/api/candidate', formData).pipe(
+    return this.http.post<Candidate>(`${environment.apiUrl}/candidate`, formData).pipe(
       tap((newCandidate) => {
         this._candidates.update((current) => [...current, newCandidate]);
       })
