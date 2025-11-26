@@ -20,7 +20,7 @@ export class AppService {
 
     if (!dataRow) {
       throw new BadRequestException(
-        'El xxcel está vacío o no tiene el formato correcto.'
+        'El excel está vacío o no tiene el formato correcto.'
       );
     }
     const jsonData = XLSX.utils.sheet_to_json(sheet);
@@ -29,6 +29,7 @@ export class AppService {
     const seniorityInput =
       row['Seniority']?.toLowerCase() || row['seniority']?.toLowerCase();
 
+    const rawAvailability = row['Availability'] || row['availability'];
     return {
       name,
       surname,
@@ -37,7 +38,7 @@ export class AppService {
           ? seniorityInput
           : 'junior',
       years: Number(row['Years of experience'] || row['years'] || row['Years']),
-      availability: Boolean(row['Availability'] || row['availability']),
+      availability: String(rawAvailability).toLowerCase() === 'true',
     };
   }
 }
