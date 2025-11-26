@@ -1,0 +1,20 @@
+.container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.candidate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;k
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+table {
+  width: 100%;
+}

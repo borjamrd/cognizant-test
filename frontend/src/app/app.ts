@@ -1,13 +1,79 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CandidateService } from './candidate.service';
+
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatTableModule,
+    MatInputModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatIconModule,
+  ],
   selector: 'app-root',
   templateUrl: './app.html',
-  styleUrl: './app.scss',
+  styleUrls: ['./app.scss'],
 })
 export class App {
-  protected title = 'frontend';
+  private fb = inject(FormBuilder);
+  private candidateService = inject(CandidateService);
+
+  candidates = this.candidateService.candidates;
+
+  displayedColumns: string[] = [
+    'name',
+    'surname',
+    'seniority',
+    'years',
+    'availability',
+  ];
+
+  candidateForm = this.fb.group({
+    name: ['', Validators.required],
+    surname: ['', Validators.required],
+    file: [null as File | null, Validators.required],
+  });
+
+  selectedFile: File | null = null;
+
+  onFileSelected(event: Event) {
+    const element = event.target as HTMLInputElement;
+
+    if (element.files && element.files.length > 0) {
+      const file: File = element.files[0];
+
+      this.selectedFile = file;
+      this.candidateForm.patchValue({ file: file });
+      this.candidateForm.get('file')?.updateValueAndValidity();
+    }
+  }
+
+  submit() {
+    if (this.candidateForm.valid && this.selectedFile) {
+      const { name, surname } = this.candidateForm.value;
+
+      if (!name || !surname) {
+        return;
+      }
+      this.candidateService
+        .uploadCandidate(name, surname, this.selectedFile)
+        .subscribe({
+          next: () => {
+            this.candidateForm.reset();
+            this.selectedFile = null;
+          },
+          error: (err) => console.error('Error al subir', err),
+        });
+    }
+  }
 }
