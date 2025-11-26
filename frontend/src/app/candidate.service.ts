@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Candidate } from '@cognizant-test/interfaces';
 import { tap } from 'rxjs/operators';
-import { environment } from '../environments/environment.prod';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
